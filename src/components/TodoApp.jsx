@@ -1,11 +1,12 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import TodoList from './TodoList'
 import TodoHeader from './TodoHeader'
 import TodoTools from './TodoTools'
 import Footer from './Footer'
 
-export default React.createClass({
-  getNbActiveItems: function () {
+export class TodoApp extends React.Component {
+  getNbActiveItems() {
     if (this.props.todos) {
       const activeItems = this.props.todos.filter(
         (item) => item.get('status') === 'active'
@@ -13,8 +14,8 @@ export default React.createClass({
       return activeItems.size;
     }
     return 0;
-  },
-  render: function () {
+  }
+  render() {
     return <div>
       <section className="todoapp">
         <TodoHeader />
@@ -25,4 +26,13 @@ export default React.createClass({
       <Footer />
     </div>
   }
-});
+};
+
+function mapStateToProps(state) {
+  return {
+    todos: state.get('todos'),
+    filter: state.get('filter')
+  };
+}
+
+export const TodoAppContainer = connect(mapStateToProps)(TodoApp);
