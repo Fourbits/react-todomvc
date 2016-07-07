@@ -1,6 +1,7 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import TextInput from './TextInput';
+import classNames from 'classnames';
 
 export default class TodoItem extends React.Component {
   constructor(props) {
@@ -8,14 +9,24 @@ export default class TodoItem extends React.Component {
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
   }
   render() {
-    return <li className="todo">
+    var itemClass = classNames({
+      'todo': true,
+      'completed': this.props.isCompleted,
+      'editing': this.props.isEditing
+    });
+    return <li className={itemClass}>
       <div className="view">
         <input type="checkbox"
-               className="toggle" />
-        <label htmlFor="todo">
+              className="toggle"
+              defaultChecked={this.props.isCompleted}
+              onClick={() => this.props.toggleComplete(this.props.id)}/>
+        <label htmlFor="todo"
+              ref="text"
+              onDoubleClick={() => this.props.editItem(this.props.id)}>
           {this.props.text}
         </label>
-        <button className="destroy"></button>
+        <button className="destroy"
+                onClick={() => this.props.deleteItem(this.props.id)}></button>
       </div>
       <TextInput />
     </li>
